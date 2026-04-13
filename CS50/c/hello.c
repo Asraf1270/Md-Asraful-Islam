@@ -1,7 +1,10 @@
 #include <stdio.h>
 int main(void) 
 {
-    printf("Hello, World!\n");
-    printf("Welcome to C programming.\n");
+    char name[50];
+    printf("What is your name? ");
+    scanf("%s", name);
+    printf("Hello, %s!\n", name);
+    printf("Welcome to CS50!\n");
     return 0;
 }
