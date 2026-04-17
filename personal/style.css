@@ -1,0 +1,45 @@
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+h3 {
+    color: #555;
+    text-align: center;
+}
+
+details {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 15px;
+}
+
+summary {
+    font-weight: bold;
+    cursor: pointer;
+    color: #007BFF;
+}
+
+summary:hover {
+    color: #0056b3;
+}
+
+#details-about-me summary {
+    color: #28a745;
+}
+#details-about-me summary:hover {
+    color: #1e7e34;
+}
+#details-expand summary {
+    color: #17a2b8;
+}
+#details-expand summary:hover {
+    color: #117a8b;
+}
