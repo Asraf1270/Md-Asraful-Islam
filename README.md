@@ -4,6 +4,7 @@ Welcome to my project repository! This workspace contains two main sections:
 
 - **CS50 C Programs**
 - **Personal Web Project**
+- **Learning Java Script**
 
 ---
 
