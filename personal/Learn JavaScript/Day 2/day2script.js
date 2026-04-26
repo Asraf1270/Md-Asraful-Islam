@@ -1,8 +1,3 @@
-//this is from day 1.
-console.log("I am Md. Asraful Islam");
-console.log("Hello ! \nI am learning JavaScript");
-console.log("I am 21 years old");
-
 // Now day 2
 let age = 21;
 let nameme = "Md. Asraful Islam";
