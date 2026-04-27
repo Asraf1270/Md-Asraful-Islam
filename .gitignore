@@ -1,0 +1,13 @@
+# Ignore compiled C binaries (files without extension)
+/CS50/c/Lacture\ 0\ \&\ 1/*
+!/CS50/c/Lacture\ 0\ \&\ 1/*.c
+!/CS50/c/Lacture\ 0\ \&\ 1/*.C
+!/CS50/c/Lacture\ 0\ \&\ 1/*.md
+
+/CS50/c/Lacture\ 2\ \(Array\)/*
+!/CS50/c/Lacture\ 2\ \(Array\)/*.c
+!/CS50/c/Lacture\ 2\ \(Array\)/*.md
+
+/CS50/c/Lecture\ 3\ \(Algorithms\)/*
+!/CS50/c/Lecture\ 3\ \(Algorithms\)/*.c
+!/CS50/c/Lecture\ 3\ \(Algorithms\)/*.md

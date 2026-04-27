@@ -1,3 +1,41 @@
+#linear search
+
+
+
+---
+## Binary Search
+Binary search is an efficient algorithm for finding an item from a sorted list of items. It works by repeatedly dividing in half the portion of the list that could contain the item, until you've narrowed down the possible locations to just one.
+
+### Pseudocode
+
+```
+function binarySearch(array, target, low, high)
+    if low > high
+        return -1  // not found
+    mid = (low + high) / 2
+    if array[mid] == target
+        return mid
+    else if array[mid] > target
+        return binarySearch(array, target, low, mid - 1)
+    else
+        return binarySearch(array, target, mid + 1, high)
+```
+
+### Characteristics
+- Time complexity: O(log n)
+- Requires sorted array
+- Efficient for large datasets
+
+---
+
+## Logarithmic Search
+
+Logarithmic search refers to search algorithms that have O(log n) time complexity, such as binary search. These algorithms reduce the search space by half with each step.
+
+For example, binary search is a logarithmic search algorithm.
+
+
+
 # Sorting Algorithms Notes
 
 Sorting is the process of arranging a collection of values in a specific order, usually ascending or descending. In algorithms, sorting is one of the most important building blocks because many other problems become easier once the data is sorted.
@@ -88,7 +126,7 @@ A simple recursive sorting approach can be described as:
 - Sort each part recursively.
 - Combine the sorted parts.
 
-### Simple recursive structure
+### Recursion pseudocode
 ```
 function recursiveSort(numbers, start, end)
     if start >= end
@@ -96,7 +134,28 @@ function recursiveSort(numbers, start, end)
     mid = (start + end) / 2
     recursiveSort(numbers, start, mid)
     recursiveSort(numbers, mid + 1, end)
-    merge sorted halves
+    merge(numbers, start, mid, end)
+
+function merge(numbers, start, mid, end)
+    left = numbers[start .. mid]
+    right = numbers[mid + 1 .. end]
+    i = 0, j = 0, k = start
+    while i < length(left) and j < length(right)
+        if left[i] <= right[j]
+            numbers[k] = left[i]
+            i = i + 1
+        else
+            numbers[k] = right[j]
+            j = j + 1
+        k = k + 1
+    while i < length(left)
+        numbers[k] = left[i]
+        i = i + 1
+        k = k + 1
+    while j < length(right)
+        numbers[k] = right[j]
+        j = j + 1
+        k = k + 1
 ```
 
 ### Why recursion helps
@@ -110,5 +169,56 @@ function recursiveSort(numbers, start, end)
 - Selection sort selects the smallest element and places it at the start.
 - Bubble sort swaps adjacent elements until the array is ordered.
 - Recursion enables divide-and-conquer sorting strategies used by advanced algorithms.
+- Merge sort efficiently sorts arrays using a divide-and-conquer approach.
 
 These ideas are foundational for understanding both simple and advanced sorting techniques in C and algorithm design.
+
+---
+
+## 4. Merge Sort
+
+Merge sort is a divide-and-conquer sorting algorithm that divides the array into two halves, recursively sorts each half, and then merges the sorted halves back together.
+
+### How it works
+
+- If the array has 0 or 1 elements, it is already sorted.
+
+- Divide the array into two halves.
+
+- Recursively sort each half.
+
+- Merge the two sorted halves into a single sorted array.
+
+### Pseudocode
+
+```
+function mergeSort(array)
+    if length(array) <= 1
+        return array
+    mid = length(array) / 2
+    left = mergeSort(array[0..mid-1])
+    right = mergeSort(array[mid..end])
+    return merge(left, right)
+
+function merge(left, right)
+    result = []
+    while left and right are not empty
+        if left[0] <= right[0]
+            add left[0] to result
+            remove left[0]
+        else
+            add right[0] to result
+            remove right[0]
+    add remaining elements from left or right to result
+    return result
+```
+
+### Characteristics
+
+- Time complexity: O(n log n)
+
+- Space complexity: O(n)
+
+- Stable: yes
+
+- Efficient for large datasets
