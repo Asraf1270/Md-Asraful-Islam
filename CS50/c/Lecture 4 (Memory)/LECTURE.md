@@ -183,20 +183,161 @@ printf("%s\n", s + 2);
 - It shows how memory addresses change when you move through data.
 - Understanding it helps with low-level data access and performance.
 
-## 8. Summary
+## 8. String Comparison
 
-Lecture 4 brings together data, memory, and pointers:
+Comparing strings in C requires special care because strings are pointers, not simple values.
+
+### Why `==` doesn't work
+- `s == t` compares memory addresses, not the contents of the strings.
+- Two strings with the same text but different addresses won't be equal with `==`.
+
+### String comparison functions
+- `strcmp(s, t)` compares two strings character by character.
+- Returns 0 if strings are equal, negative if `s < t`, positive if `s > t`.
+
+### Example
+```c
+char *s = "HI!";
+char *t = "HI!";
+
+if (s == t)          // FALSE - different addresses
+    printf("Same\n");
+
+if (strcmp(s, t) == 0) // TRUE - same content
+    printf("Same\n");
+```
+
+## 9. Copying and malloc
+
+Copying strings and dynamically allocating memory are fundamental memory operations.
+
+### Why simple assignment doesn't copy
+- `char *s = t;` makes both pointers reference the same memory.
+- Changing one string affects the other.
+
+### Using `strcpy` (unsafe)
+- `strcpy(s, t)` copies a string from `t` to `s`.
+- Assumes `s` has enough space, which can cause buffer overflow.
+
+### Using `malloc` for dynamic memory
+- `malloc(n)` allocates `n` bytes of memory on the heap.
+- Returns a pointer to the allocated memory.
+- Must include `<stdlib.h>`.
+
+### Safe string copying with malloc
+```c
+#include <stdlib.h>
+#include <string.h>
+
+char *t = "HI!";
+char *s = malloc(strlen(t) + 1); // +1 for null terminator
+strcpy(s, t);
+
+printf("%s\n", s);
+free(s); // release memory when done
+```
+
+### Memory cleanup
+- Always use `free()` to release memory allocated with `malloc`.
+- Failing to free memory causes memory leaks.
+
+## 10. Valgrind
+
+Valgrind is a tool that detects memory-related errors in C programs.
+
+### What valgrind does
+- Tracks memory allocation and deallocation.
+- Detects memory leaks (allocated but never freed).
+- Identifies use-after-free errors.
+- Reports invalid memory accesses.
+
+### Using valgrind
+```bash
+valgrind ./program
+```
+
+### Common valgrind output
+- Reports show where memory was allocated and not freed.
+- Helpful for finding bugs in memory management.
+- Essential when working with pointers and dynamic memory.
+
+## 11. Garbage Values
+
+Garbage values are unpredictable data in memory that haven't been initialized.
+
+### What causes garbage values
+- Declaring a variable without initializing it.
+- Reading from unallocated memory.
+- Using memory after it's been freed.
+
+### Example
+```c
+int *p;        // p points to random memory
+printf("%i\n", *p); // prints garbage value
+```
+
+### How to avoid garbage values
+- Always initialize variables: `int x = 0;`
+- Always initialize pointers before use: `int *p = malloc(sizeof(int));`
+- Set memory to zero when allocating: `malloc()` doesn't initialize.
+- Use tools like valgrind to detect uninitialized memory.
+
+## 12. Swapping
+
+Swapping values is a common operation that demonstrates the power of pointers.
+
+### Why simple swapping doesn't work
+- Without pointers, you can't swap values in a way that affects the caller.
+- Local variables can't change the original values.
+
+### Swapping with pointers
+- Pass addresses to a swap function.
+- Inside the function, use pointers to modify the original values.
+
+### Example
+```c
+void swap(int *a, int *b)
+{
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+int main(void)
+{
+    int x = 1;
+    int y = 2;
+
+    swap(&x, &y);
+
+    printf("x = %i, y = %i\n", x, y); // x = 2, y = 1
+}
+```
+
+### Key concept
+- Pointers allow functions to modify variables in the caller's scope.
+- This is essential for many algorithms and data structures.
+
+## 13. Summary
+
+Lecture 4 covers advanced memory concepts:
 - Memory stores data in bytes at addresses.
-- Hexadecimal is a convenient way to read and express memory values.
-- Pixel art demonstrates how values map to visual data stored in memory.
-- Pointers provide a way to work directly with memory addresses.
+- Hexadecimal makes memory values readable.
+- Pixel art shows data stored in memory visually.
+- Pointers allow direct memory access.
 - Strings are character arrays ended by `\0`.
-- Pointer arithmetic lets you navigate memory relative to the type size.
-- Understanding memory and pointers is essential for safe, powerful C programming.
+- Pointer arithmetic navigates memory by type size.
+- String comparison requires `strcmp`, not `==`.
+- `malloc()` allocates heap memory; `free()` releases it.
+- Valgrind detects memory errors.
+- Garbage values come from uninitialized memory.
+- Pointers enable swapping and other advanced operations.
 
-## 9. Additional notes
+## 14. Additional notes
 
 - Practice drawing memory diagrams for variables and pointers.
 - Review how arrays, strings, and pointers are related.
 - Remember that pointer types matter because they affect how many bytes are read or written.
-- Use tools like `printf` to inspect addresses and values while learning.
+- Always allocate enough memory and initialize pointers properly.
+- Use valgrind regularly to catch memory leaks and errors.
+- Test swap functions and other pointer-based operations carefully.
