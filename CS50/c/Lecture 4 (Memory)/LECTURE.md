@@ -318,7 +318,68 @@ int main(void)
 - Pointers allow functions to modify variables in the caller's scope.
 - This is essential for many algorithms and data structures.
 
-## 13. Summary
+## 13. Overflow
+
+Overflow happens when a value exceeds the storage capacity of its data type.
+
+### Integer overflow
+- An `int` can only store values within a certain range.
+- Adding or multiplying values beyond that range can wrap around.
+- This can produce incorrect, unpredictable results.
+
+### Buffer overflow
+- A buffer overflow occurs when more data is written into a memory area than it can hold.
+- Common with strings and arrays in C.
+- Can overwrite adjacent memory, causing bugs or security vulnerabilities.
+
+### Example
+```c
+char buffer[4];
+strcpy(buffer, "HELLO"); // Writes 6 bytes into 4-byte buffer
+```
+
+### Avoiding overflow
+- Always allocate enough space for data and the null terminator.
+- Use safer functions like `strncpy()` carefully.
+- Check bounds before writing into arrays.
+
+## 14. File I/O
+
+File input/output lets programs read from and write to files.
+
+### Opening files
+- Use `fopen()` to open a file.
+- Example: `FILE *file = fopen("data.txt", "r");`
+- Modes: `"r"` for read, `"w"` for write, `"a"` for append.
+
+### Reading and writing
+- `fgets()` reads a line from a file.
+- `fprintf()` writes formatted text to a file.
+- `fclose()` closes the file when done.
+
+### Example
+```c
+#include <stdio.h>
+
+int main(void)
+{
+    FILE *file = fopen("output.txt", "w");
+    if (file == NULL)
+        return 1;
+
+    fprintf(file, "Hello, file!\n");
+    fclose(file);
+
+    return 0;
+}
+```
+
+### Why it matters
+- File I/O lets programs save data permanently.
+- It is used for reading configuration, storing results, and more.
+- Always close files to release system resources.
+
+## 15. Summary
 
 Lecture 4 covers advanced memory concepts:
 - Memory stores data in bytes at addresses.
@@ -331,9 +392,11 @@ Lecture 4 covers advanced memory concepts:
 - `malloc()` allocates heap memory; `free()` releases it.
 - Valgrind detects memory errors.
 - Garbage values come from uninitialized memory.
+- Overflow can corrupt data or cause security issues.
+- File I/O lets programs read and write persistent files.
 - Pointers enable swapping and other advanced operations.
 
-## 14. Additional notes
+## 16. Additional notes
 
 - Practice drawing memory diagrams for variables and pointers.
 - Review how arrays, strings, and pointers are related.
@@ -341,3 +404,5 @@ Lecture 4 covers advanced memory concepts:
 - Always allocate enough memory and initialize pointers properly.
 - Use valgrind regularly to catch memory leaks and errors.
 - Test swap functions and other pointer-based operations carefully.
+- Validate array sizes before using them to prevent overflow.
+- Close files after using them to free resources and avoid leaks.
