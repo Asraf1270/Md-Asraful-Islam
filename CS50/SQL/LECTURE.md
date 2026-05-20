@@ -200,7 +200,218 @@ WHERE language = 'python';
 - `LIKE` is case-sensitive in many SQL engines; use functions like `LOWER()` if needed.
 - Use `ORDER BY` to sort results and `LIMIT` to restrict how many rows are returned.
 
-## 10. Example workflow
+## 10. IMDb-style tables, relationships, and joins
+
+### 10.1 Table relationships
+
+- `shows` and `ratings` are two related tables.
+- `shows` might contain one row per show.
+- `ratings` might contain many rows for the same show, one row per rating.
+- This is a one-to-many relationship: one show can have many ratings.
+- A one-to-one relationship means each row in one table matches exactly one row in another table.
+  - Example: `show_details` may store one detail row for each show in `shows`.
+
+### 10.2 Example queries
+
+```sql
+SELECT * FROM shows LIMIT 10;
+```
+- Shows the first 10 rows from the `shows` table.
+
+```sql
+SELECT show_id FROM ratings
+WHERE rating >= 6.0
+LIMIT 10;
+```
+- Finds up to 10 rating rows for shows with rating 6.0 or higher.
+
+```sql
+SELECT * FROM shows
+WHERE id IN (
+    SELECT show_id FROM ratings
+    WHERE rating >= 6.0
+    LIMIT 10
+);
+```
+- Uses a subquery to find shows whose `id` appears in the qualifying rating rows.
+- The subquery returns show IDs meeting the rating condition.
+
+```sql
+SELECT * FROM shows
+JOIN ratings ON shows.id = ratings.show_id
+WHERE ratings.rating >= 6.0
+LIMIT 10;
+```
+- Joins `shows` with `ratings` using the matching show ID.
+- Returns combined rows from both tables where the rating is at least 6.0.
+- This is the usual way to combine rows from related tables.
+
+> Note: In SQL, the table name must be correct. If the table is `ratings`, use `ratings` consistently. The join condition should use the correct column names, such as `shows.id = ratings.show_id`.
+
+## 11. One-to-many relationships
+
+One-to-many relationships link a single row in one table to multiple rows in another.
+
+### 11.1 Basic one-to-many queries
+
+```sql
+SELECT genre FROM genres WHERE show_id = 5847;
+```
+- Returns all genres associated with show ID 5847.
+- One show has many genres.
+
+```sql
+SELECT id FROM shows WHERE title = 'Catweazle';
+```
+- Finds the show ID by title.
+
+### 11.2 Nested subqueries
+
+```sql
+SELECT id FROM shows WHERE id = (
+    SELECT id FROM shows WHERE title = 'Catweazle'
+);
+```
+- A subquery returns the matching show ID, then the outer query filters by that ID.
+
+```sql
+SELECT * FROM shows
+JOIN genres ON shows.id = genres.show_id
+WHERE shows.id = 58947;
+```
+- Joins `shows` and `genres` on the show ID.
+- Returns the show and all its genres in one result set.
+
+```sql
+SELECT genre FROM shows
+JOIN genres ON shows.id = genres.show_id
+WHERE shows.id = 784545;
+```
+- Returns only genre names for a specific show.
+
+### 11.3 Finding shows by title
+
+```sql
+SELECT * FROM shows WHERE title = 'The Office';
+```
+- Returns all rows for shows with that title.
+
+```sql
+SELECT * FROM shows
+WHERE title = 'The Office' AND year = 2005;
+```
+- Narrows results by adding a year condition.
+
+### 11.4 Finding people in a show
+
+```sql
+SELECT person_id FROM stars
+WHERE show_id = (
+    SELECT id FROM shows
+    WHERE title = 'The Office' AND year = 2005
+);
+```
+- Finds all actors (person IDs) in a specific show.
+- The inner subquery gets the show ID, the outer gets matching person IDs.
+
+```sql
+SELECT name FROM people
+WHERE id IN (
+    SELECT person_id FROM stars
+    WHERE show_id = (
+        SELECT id FROM shows
+        WHERE title = 'The Office' AND year = 2005
+    )
+);
+```
+- Returns the actual names of all actors in the show.
+- Multiple nested subqueries: find show → find person IDs → find names.
+
+### 11.5 Finding shows by actor name
+
+```sql
+SELECT title FROM shows
+WHERE id IN (
+    SELECT show_id FROM stars
+    WHERE person_id = (
+        SELECT id FROM people
+        WHERE name = 'Steve Carell'
+    )
+);
+```
+- Finds all shows featuring a specific actor.
+- The innermost subquery returns the actor's person ID.
+
+### 11.6 Multiple joins in one query
+
+```sql
+SELECT title FROM shows
+JOIN stars ON shows.id = stars.show_id
+JOIN people ON stars.person_id = people.id
+WHERE people.name = 'Steve Carell';
+```
+- Uses multiple JOINs to connect three tables at once.
+- Returns show titles for the given actor.
+
+### 11.7 Implicit joins using comma syntax
+
+```sql
+SELECT title FROM shows, stars, people
+WHERE shows.id = stars.show_id
+AND people.id = stars.person_id
+AND people.name = 'Steve Carell';
+```
+- An alternative join syntax using commas instead of explicit JOIN keywords.
+- The WHERE clause performs the join conditions.
+- Functionally equivalent to explicit JOINs but less readable.
+
+### 11.8 View table schema
+
+```sql
+.schema writers
+```
+- A SQLite command that displays the structure of the `writers` table.
+- Shows column names, types, and constraints.
+
+## 12. Indexes for query optimization
+
+Indexes speed up queries by creating a lookup structure for columns.
+
+### 12.1 Enable timing
+
+```sql
+.timer ON
+```
+- A SQLite command that displays query execution time.
+- Helps measure the performance impact of indexes.
+
+### 12.2 Query without index
+
+```sql
+SELECT * FROM shows WHERE title = 'The Office';
+```
+- Without an index on `title`, SQLite scans every row (full table scan).
+- This is slow for large tables.
+
+### 12.3 Create an index
+
+```sql
+CREATE INDEX title_index ON shows (title);
+```
+- Creates an index named `title_index` on the `title` column of `shows`.
+- Indexes are sorted data structures that enable fast lookups.
+
+### 12.4 Query with index
+
+```sql
+SELECT * FROM shows WHERE title = 'The Office';
+```
+- With the index, SQLite uses it to find matching rows quickly.
+- Much faster than a full table scan for large datasets.
+
+> Tip: Create indexes on columns used frequently in `WHERE` clauses or JOIN conditions. Too many indexes can slow down inserts and updates.
+
+## 13. Example workflow
 
 1. Inspect rows:
    ```sql
@@ -231,4 +442,67 @@ WHERE language = 'python';
 
 ---
 
-These notes cover the SQL queries you tested and explain how they work in a relational database. Use this as a reference for `SELECT`, `WHERE`, `GROUP BY`, `ORDER BY`, `INSERT`, `DELETE`, and `UPDATE` operations.
+These notes cover the SQL queries you tested and explain how they work in a relational database. Use this as a reference for `SELECT`, `WHERE`, `GROUP BY`, `ORDER BY`, `INSERT`, `DELETE`, `UPDATE`, `JOIN`, subqueries, and indexes.
+
+## 14. Python and SQL
+
+- Python can interact with SQL databases directly (e.g., `sqlite3`, `psycopg2`, `mysql-connector`) or via ORMs (e.g., SQLAlchemy, Django ORM).
+- Use parameterized queries to avoid SQL injection and to let the DB engine optimize queries.
+
+Example using `sqlite3` (safe parameterized query):
+
+```python
+import sqlite3
+
+conn = sqlite3.connect('shows.db')
+cur = conn.cursor()
+
+# Parameterized - use placeholders and a tuple
+cur.execute("SELECT title FROM shows WHERE year = ?", (2005,))
+for (title,) in cur.fetchall():
+    print(title)
+
+conn.close()
+```
+
+- With ORMs you write Python objects and let the ORM generate SQL; still prefer parameterized filters.
+- Use transactions (`BEGIN` / `COMMIT`) when modifying multiple rows to keep changes atomic.
+
+## 15. Race conditions (in databases)
+
+- A race condition occurs when concurrent operations interleave and produce incorrect or unexpected results (e.g., lost updates).
+- Example: two clients read a balance, both subtract 10, both write back — one update is lost.
+
+Mitigations:
+- Use transactions to group reads and writes: `BEGIN TRANSACTION; ... COMMIT;`.
+- Use appropriate isolation levels (e.g., `READ COMMITTED`, `REPEATABLE READ`, `SERIALIZABLE`) when supported.
+- Use row-level locks (`SELECT ... FOR UPDATE`) or optimistic locking (a `version` column that you check/update atomically).
+- In SQLite, take care: default isolation and locking behavior differs from client-server DBs; use transactions explicitly.
+
+## 16. SQL injection attacks
+
+- SQL injection happens when untrusted input is concatenated into SQL, allowing attackers to change the query.
+- Vulnerable example (do NOT use):
+
+```python
+user = "'; DROP TABLE users; --"
+query = f"SELECT * FROM users WHERE name = '{user}'"
+cur.execute(query)
+```
+
+Safe practices:
+- Use parameterized queries / prepared statements (placeholders) instead of string interpolation.
+- Example (safe):
+
+```python
+cur.execute("SELECT * FROM users WHERE name = ?", (user,))
+```
+
+- Use ORMs or query builders that automatically parameterize values.
+- Validate and sanitize input where appropriate (e.g., ensure numeric values are numeric).
+- Apply least privilege: database users should have only necessary permissions.
+- Keep DB software and drivers up-to-date and monitor for suspicious queries.
+
+---
+
+These notes cover the SQL queries you tested and explain how they work in a relational database. Use this as a reference for `SELECT`, `WHERE`, `GROUP BY`, `ORDER BY`, `INSERT`, `DELETE`, `UPDATE`, `JOIN`, subqueries, indexes, transactions, and security best practices.
