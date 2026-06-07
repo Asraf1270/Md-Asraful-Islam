@@ -781,13 +781,177 @@ fetch('/api/users/1', { method: 'DELETE' })
 
 ---
 
-## Summary
+## HTML — Complete Reference (Tags, Classes, IDs, Attributes)
 
-Week 8 covers the full web stack:
-- **Networking**: Understanding how data travels across the internet
-- **Web Protocols**: HTTP/HTTPS for client-server communication
-- **Frontend**: HTML, CSS, and JavaScript for building interactive web pages
-- **Developer Tools**: Using DevTools to inspect, debug, and optimize websites
+### HTML Tag Categories (common and important)
+- **Document structure:** `<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`
+- **Metadata:** `<meta>`, `<title>`, `<link>`, `<base>`
+- **Text content:** `<h1>-<h6>`, `<p>`, `<span>`, `<hr>`, `<br>`
+- **Grouping content:** `<div>`, `<section>`, `<article>`, `<nav>`, `<header>`, `<footer>`, `<aside>`
+- **Lists:** `<ul>`, `<ol>`, `<li>`, `<dl>`, `<dt>`, `<dd>`
+- **Links & anchors:** `<a href="...">` (linking, `target`, `rel`)
+- **Images & media:** `<img src="..." alt="...">`, `<picture>`, `<video>`, `<audio>`, `<source>`
+- **Tables:** `<table>`, `<thead>`, `<tbody>`, `<tfoot>`, `<tr>`, `<th>`, `<td>`
+- **Forms & inputs:** `<form>`, `<input>`, `<label>`, `<textarea>`, `<select>`, `<option>`, `<button>`, `<fieldset>`, `<legend>`
+- **Interactive/Embedded:** `<button>`, `<details>`, `<summary>`, `<iframe>`, `<embed>`, `<object>`
+- **Scripting:** `<script>`, with `type` and `defer/async` attributes
+- **Semantic elements:** `<main>`, `<figure>`, `<figcaption>`, `<mark>`, `<time>`, `<progress>`, `<meter>`
 
-By mastering these topics, you'll understand how the web works and be able to build modern, responsive, and secure web applications!
+### Classes, IDs, and Attributes
+- **`id`**: Unique identifier for a single element on the page. Use for anchors, styling, and JavaScript access. Example: `<div id="header">`.
+- **`class`**: Non-unique label used to group elements for styling and scripting. Example: `<button class="btn primary">`.
+- **Common attributes:** `href`, `src`, `alt`, `title`, `lang`, `rel`, `type`, `name`, `value`, `placeholder`, `disabled`, `checked`, `readonly`, `required`, `autofocus`, `data-*` (custom data attributes).
+
+Example using tags, classes, ids, attributes:
+
+```html
+<header id="main-header" class="site-header">
+  <nav class="nav">
+    <a href="/" class="logo" title="Home">Brand</a>
+    <ul class="nav-list">
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+```
+
+### Best Practices (HTML)
+- Use semantic tags for accessibility and SEO.
+- Keep `id` values unique; prefer `class` for reusable styles.
+- Provide `alt` for images and descriptive `title` where helpful.
+- Use `aria-*` attributes for accessibility when semantics are insufficient.
+
+---
+
+## CSS — Complete Reference (Selectors, Properties, Layouts, Tools)
+
+### Selectors (how to target elements)
+- **Type selector:** `div`, `p`, `a`
+- **Class selector:** `.btn`
+- **ID selector:** `#header`
+- **Attribute selector:** `input[type="email"]`, `a[target="_blank"]`
+- **Combinators:** descendant (`.nav a`), child (`.list > li`), adjacent (`h1 + p`), general sibling (`h1 ~ p`)
+- **Pseudo-classes:** `:hover`, `:active`, `:focus`, `:nth-child()`, `:first-child`
+- **Pseudo-elements:** `::before`, `::after`, `::first-letter`, `::selection`
+
+### Core Concepts
+- **Cascade & Specificity:** Order + selector weight determine final styles.
+- **Box model:** `content`, `padding`, `border`, `margin`.
+- **Units:** `px`, `em`, `rem`, `%`, `vw`, `vh`, `ch`, `vmin`/`vmax`.
+- **Colors:** `hex`, `rgb()`, `rgba()`, `hsl()`, `currentColor`, CSS variables `--my-color`.
+
+### Layout Techniques
+- **Normal flow** (block & inline)
+- **Floats** (legacy)
+- **Positioning:** `static`, `relative`, `absolute`, `fixed`, `sticky`
+- **Flexbox:** one-dimensional layout for rows or columns
+- **Grid:** two-dimensional layout system for complex designs
+- **Multi-column layout** and CSS functions like `calc()`
+
+### Styling Examples
+
+```css
+:root { --brand: #007bff; --gap: 16px; }
+.container { max-width: 1200px; margin: 0 auto; padding: var(--gap); }
+.card { display: flex; flex-direction: column; gap: 12px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.btn { background: var(--brand); color: #fff; padding: 10px 14px; border-radius: 6px; }
+.btn:focus { outline: 3px solid rgba(0,123,255,0.25); }
+```
+
+### Animations & Transitions
+- **Transition** for simple state changes: `transition: all 0.3s ease;`
+- **Keyframe animations** for complex sequences: `@keyframes slideIn { from { opacity: 0 } to { opacity: 1 } }`
+
+### Tools and Preprocessors
+- **Preprocessors:** Sass, Less — variables, nesting, mixins
+- **Post-processing:** PostCSS, Autoprefixer
+- **Build tools:** bundlers (Webpack, Vite, Rollup) often used for production CSS
+
+### Best Practices (CSS)
+- Prefer responsive, mobile-first rules.
+- Keep specificity low; favor utility classes or BEM naming.
+- Use CSS variables for theming.
+- Minimize layout shifts for better UX.
+
+---
+
+## JavaScript — Complete Reference (Language, DOM, Async, Modules, Web APIs)
+
+### Language Basics
+- **Data types:** `Number`, `String`, `Boolean`, `BigInt`, `Symbol`, `Object`, `undefined`, `null`
+- **Variables:** `let`, `const` (preferred), `var` (function-scoped legacy)
+- **Operators:** arithmetic, comparison, logical, ternary, optional chaining `?.`, nullish coalescing `??`
+
+### Functions & Scope
+- **Function declaration:** `function foo() {}`
+- **Function expression:** `const foo = function() {}`
+- **Arrow functions:** `const sum = (a,b) => a + b;` (lexical `this`)
+- **Scope:** block scope (`let/const`), hoisting differences
+
+### Objects & OOP
+- **Objects:** literal `{}`, computed properties, destructuring
+- **Prototypes & classes:** `class User { constructor(){} }` (ES6 sugar over prototypes)
+
+### Arrays & Iteration
+- Methods: `.forEach`, `.map`, `.filter`, `.reduce`, `.find`, `.some`, `.every`, `.flat`, `.flatMap`
+
+### DOM (Document Object Model)
+- **Selection:** `querySelector`, `querySelectorAll`, `getElementById`, `getElementsByClassName`
+- **Manipulation:** `textContent`, `innerHTML`, `appendChild`, `replaceWith`, `remove()`
+- **Attributes & dataset:** `el.getAttribute('data-id')`, `el.dataset.key`
+
+### Events
+- **Add listener:** `el.addEventListener('click', handler)`
+- **Event object:** `event.target`, `event.currentTarget`, `event.preventDefault()`, `event.stopPropagation()`
+- **Delegation:** attach listener to parent and handle via `event.target` for dynamic children
+
+### Asynchronous JavaScript
+- **Callbacks** (older style)
+- **Promises:** `.then().catch()`
+- **Async/Await:** clean syntax for promise-based code
+- **Fetch API:** built-in network requests
+
+Example async flow:
+
+```javascript
+async function getUser(id) {
+  const res = await fetch(`/api/users/${id}`);
+  if (!res.ok) throw new Error('Network error');
+  return res.json();
+}
+
+getUser(1).then(user => console.log(user)).catch(err => console.error(err));
+```
+
+### Modules & Tooling
+- **ES Modules (ESM):** `import` / `export` — native in modern browsers and Node.js
+- **Bundlers/Transpilers:** Babel, Webpack, Parcel, Vite for older browser support and packaging
+
+### Web APIs (browser-provided)
+- **Storage:** `localStorage`, `sessionStorage`, `IndexedDB`
+- **Workers:** Web Workers and Service Workers for background tasks and offline caching
+- **History & Navigation:** `history.pushState`, `popstate` for SPA navigation
+- **Canvas, WebGL** for graphics
+- **Geolocation, Notifications, Clipboard, WebRTC** — advanced capabilities
+
+### Debugging & Testing
+- Use DevTools Console, debugger statements, breakpoints
+- Unit testing: Jest, Mocha; E2E: Cypress, Playwright
+
+### Best Practices (JavaScript)
+- Use `const` by default, prefer pure functions, avoid global variables
+- Handle errors and rejected promises explicitly
+- Keep UI updates batched and minimal to avoid jank
+- Use feature detection for experimental Web APIs
+
+---
+
+## Finishing the Lecture
+
+- The lecture has been expanded to include complete references for HTML tags, classes, ids, and attributes; CSS selectors, properties, layouts, and tooling; and JavaScript language features, DOM, events, asynchronous programming, modules, and Web APIs.
+- Actionable next steps: review the added code examples in the `HTML, CSS, and JavaScript/LECTURE.md` file, test examples in a browser, and optionally extract examples into separate files for demos.
+
+Lecture complete.
  
