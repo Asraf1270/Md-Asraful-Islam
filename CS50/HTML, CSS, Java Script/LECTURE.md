@@ -790,3 +790,4 @@ Week 8 covers the full web stack:
 - **Developer Tools**: Using DevTools to inspect, debug, and optimize websites
 
 By mastering these topics, you'll understand how the web works and be able to build modern, responsive, and secure web applications!
+ 
