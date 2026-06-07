@@ -19,3 +19,6 @@
 /CS50/c/Lecture\ 5\ \(Data\ Structure\)/*
 !/CS50/c/Lecture\ 5\ \(Data\ Structure\)/*.c
 !/CS50/c/Lecture\ 5\ \(Data\ Structure\)/*.md
+
+.vscode
+.venv
