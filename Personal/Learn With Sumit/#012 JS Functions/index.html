@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Console Viewer</title>
+    <style>
+        #console {
+            background: #111;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Console Output</h2>
+<div id="console"></div>
+
+<script>
+    const consoleDiv = document.getElementById("console");
+
+    const originalLog = console.log;
+
+    console.log = function (...args) {
+        originalLog.apply(console, args); // still shows in DevTools
+        consoleDiv.textContent += args.join(" ") + "\n";
+    };
+</script>
+<script src="script.js"></script>
+
+</body>
+</html>
